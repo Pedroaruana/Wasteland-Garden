@@ -1,6 +1,7 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import jwt from '@fastify/jwt'
+import rateLimit from '@fastify/rate-limit'
 import { authRoutes } from './routes/auth.js'
 import { taskRoutes } from './routes/tasks.js'
 import { categoryRoutes } from './routes/categories.js'
@@ -16,6 +17,12 @@ export async function buildApp() {
 
   await app.register(jwt, {
     secret: process.env.JWT_SECRET ?? 'dev-secret-change-in-production',
+  })
+
+  await app.register(rateLimit, {
+    global: false,
+    max: 100,
+    timeWindow: '1 minute',
   })
 
   app.register(authRoutes, { prefix: '/auth' })
