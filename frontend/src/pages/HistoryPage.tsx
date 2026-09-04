@@ -143,20 +143,20 @@ function PlantGalleryModal({ onClose }: { onClose: () => void }) {
         <CornerBrackets />
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color: '#c4a35a' }}>PLANTAS DISPONÍVEIS</p>
-          <button onClick={onClose} style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', background: 'transparent', border: '1px solid #3d3428', color: '#6b6055', padding: '3px 8px', cursor: 'pointer' }}>✕</button>
+          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '11px', color: '#c4a35a' }}>PLANTAS DISPONÍVEIS</p>
+          <button onClick={onClose} style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', background: 'transparent', border: '1px solid #3d3428', color: '#6b6055', padding: '3px 8px', cursor: 'pointer' }}>✕</button>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
           {PLANT_TYPES.map((type) => (
             <div key={type} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, background: '#1a1410', border: '1px solid #3d3428', padding: '14px 8px' }}>
               <FruitPlant type={type} />
-              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#e8dcc8' }}>{PLANT_EMOJI[type]} {PLANT_NAMES[type]}</p>
+              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#e8dcc8' }}>{PLANT_EMOJI[type]} {PLANT_NAMES[type]}</p>
             </div>
           ))}
         </div>
 
-        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: '#4a3f33', textAlign: 'center', marginTop: 16, lineHeight: 1.8 }}>
+        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#4a3f33', textAlign: 'center', marginTop: 16, lineHeight: 1.8 }}>
           O tipo de planta é definido automaticamente ao plantar. Colha todas as 6 para completar a coleção!
         </p>
       </div>
@@ -196,17 +196,17 @@ export default function HistoryPage() {
       {/* Header */}
       <header style={{ background: '#1a1410', borderBottom: '2px solid #3d3428', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '11px', color: '#c4a35a', letterSpacing: '2px' }}>ESTUFA</p>
-          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: '#4a3f33', marginTop: 4 }}>PLANTAS COLHIDAS — ARQUIVO DA WASTELAND</p>
+          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '13px', color: '#c4a35a', letterSpacing: '2px' }}>ESTUFA</p>
+          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#4a3f33', marginTop: 4 }}>PLANTAS COLHIDAS — ARQUIVO DA WASTELAND</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button
             onClick={() => setShowGallery(true)}
-            style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#c4a35a', background: 'transparent', border: '1px solid #c4a35a', padding: '5px 10px', cursor: 'pointer' }}
+            style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#c4a35a', background: 'transparent', border: '1px solid #c4a35a', padding: '5px 10px', cursor: 'pointer' }}
           >
             🌿 TODAS AS PLANTAS
           </button>
-          <Link to="/garden" style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#7ab648', textDecoration: 'none', border: '1px solid #7ab648', padding: '5px 10px' }}>
+          <Link to="/garden" style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#7ab648', textDecoration: 'none', border: '1px solid #7ab648', padding: '5px 10px' }}>
             ‹ JARDIM
           </Link>
         </div>
@@ -225,8 +225,8 @@ export default function HistoryPage() {
           ].map(({ label, value, color }) => (
             <div key={label} style={{ position: 'relative', background: '#1a1410', border: '1px solid #3d3428', padding: '12px 8px', textAlign: 'center' }}>
               <CornerBrackets />
-              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '14px', color, marginBottom: 6 }}>{value}</p>
-              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: '#6b6055' }}>{label}</p>
+              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '16px', color, marginBottom: 6 }}>{value}</p>
+              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#6b6055' }}>{label}</p>
             </div>
           ))}
         </div>
@@ -238,7 +238,7 @@ export default function HistoryPage() {
               key={f}
               onClick={() => setFilter(f)}
               style={{
-                fontFamily: 'var(--pixel-font)', fontSize: '5px',
+                fontFamily: 'var(--pixel-font)', fontSize: '7px',
                 padding: '5px 8px', cursor: 'pointer',
                 background: filter === f ? '#2a1e08' : '#1a1410',
                 border: `1px solid ${filter === f ? '#c4a35a' : '#3d3428'}`,
@@ -253,8 +253,8 @@ export default function HistoryPage() {
         {/* Empty state */}
         {rawTasks.length === 0 && (
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#3d3428', marginBottom: 12 }}>ESTUFA VAZIA</p>
-            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#4a3f33' }}>Colha sua primeira planta no jardim para ver o histórico aqui.</p>
+            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '10px', color: '#3d3428', marginBottom: 12 }}>ESTUFA VAZIA</p>
+            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#4a3f33' }}>Colha sua primeira planta no jardim para ver o histórico aqui.</p>
           </div>
         )}
 
@@ -264,9 +264,9 @@ export default function HistoryPage() {
             <div key={month}>
               {/* Month divider */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#3d3428', flexShrink: 0 }}>{month}</p>
+                <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#3d3428', flexShrink: 0 }}>{month}</p>
                 <div style={{ flex: 1, height: 1, background: '#3d3428' }}/>
-                <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: '#3d3428', flexShrink: 0 }}>{tasks.length}x</p>
+                <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#3d3428', flexShrink: 0 }}>{tasks.length}x</p>
               </div>
 
               {/* Cards */}
@@ -289,25 +289,25 @@ export default function HistoryPage() {
 
                       {/* Info */}
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#e8dcc8', marginBottom: 7 }}>
+                        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color: '#e8dcc8', marginBottom: 7 }}>
                           {task.title}
                         </p>
                         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 7 }}>
-                          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: '#6b6055' }}>
+                          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#6b6055' }}>
                             PLANTADA: <span style={{ color: '#c4a35a' }}>{plantDate}</span>
                           </p>
-                          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: '#6b6055' }}>
+                          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#6b6055' }}>
                             COLHIDA: <span style={{ color: '#c4a35a' }}>{harvestDate}</span>
                           </p>
                         </div>
                         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', padding: '3px 6px', border: '1px solid #7ab648', color: '#7ab648', background: '#0a1e0a' }}>
+                          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', padding: '3px 6px', border: '1px solid #7ab648', color: '#7ab648', background: '#0a1e0a' }}>
                             {PLANT_EMOJI[type]} {PLANT_NAMES[type]}
                           </span>
-                          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', padding: '3px 6px', border: '1px solid #c4a35a', color: '#c4a35a', background: '#1e1408' }}>
+                          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', padding: '3px 6px', border: '1px solid #c4a35a', color: '#c4a35a', background: '#1e1408' }}>
                             {days} DIA{days !== 1 ? 'S' : ''}
                           </span>
-                          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', padding: '3px 6px', border: '1px solid #4fc3a0', color: '#4fc3a0', background: '#081e1a' }}>
+                          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', padding: '3px 6px', border: '1px solid #4fc3a0', color: '#4fc3a0', background: '#081e1a' }}>
                             +20 O₂
                           </span>
                         </div>

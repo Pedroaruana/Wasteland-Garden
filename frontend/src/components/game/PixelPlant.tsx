@@ -84,7 +84,7 @@ const styles: Record<string, CSSProperties> = {
   },
   label: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '6px',
+    fontSize: '8px',
     color: 'var(--text-secondary)',
     textAlign: 'center' as const,
   },

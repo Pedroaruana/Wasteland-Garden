@@ -1,0 +1,15 @@
+# Wasteland Garden
+
+> Gerenciador de tarefas gamificado em pixel art, ambientado em 2056 num mundo pós-apocalíptico. Cada tarefa criada é uma semente que precisa ser regada e cuidada até virar uma planta colhível, gerando oxigênio pro jogador.
+
+Wasteland Garden é um projeto de portfólio pessoal, feito em React + TypeScript no frontend e Node.js/Fastify no backend, com PostgreSQL via Prisma. Não tem conteúdo textual extenso pra indexação — é uma aplicação interativa (jogo/ferramenta), não um site de conteúdo.
+
+## Páginas
+- /: landing page e apresentação do jogo
+- /garden: o jardim (jogo em si, precisa de conta ou modo visitante)
+- /history: histórico de plantas colhidas
+- /privacidade: política de privacidade
+- /termos: termos de uso
+
+## Código-fonte
+https://github.com/Pedroaruana/Wasteland-Garden

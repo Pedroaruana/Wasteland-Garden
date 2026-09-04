@@ -36,6 +36,10 @@ const STAGE_LABEL: Record<Task['stage'], string> = {
   SEED: 'SEMENTE', SPROUT: 'BROTO', SAPLING: 'MUDA', TREE: 'CRESCENDO', FRUIT: 'PRONTA!'
 }
 
+const STAGE_PERCENT: Record<Task['stage'], number> = {
+  SEED: 5, SPROUT: 25, SAPLING: 50, TREE: 75, FRUIT: 100,
+}
+
 // 6 plant types — each slot has its own plant
 const PLANT_TYPES = ['sunflower', 'cactus', 'tulip', 'rose', 'monstera', 'fern'] as const
 type PlantType = typeof PLANT_TYPES[number]
@@ -233,12 +237,14 @@ interface PotSlotProps {
   onWater: (id: string) => void
   onPlant: (title: string) => void
   onHarvest: (id: string) => void
+  onRemove: (id: string) => void
 }
 
-function PotSlot({ task, slotIndex, onWater, onPlant, onHarvest }: PotSlotProps) {
+function PotSlot({ task, slotIndex, onWater, onPlant, onHarvest, onRemove }: PotSlotProps) {
   const [planting, setPlanting] = useState(false)
   const [title, setTitle] = useState('')
   const [stageAnim, setStageAnim] = useState(false)
+  const [confirmingRemove, setConfirmingRemove] = useState(false)
   const prevStageRef = useRef<string | undefined>(undefined)
   const plantType = PLANT_TYPES[slotIndex]
   const occupied = !!task
@@ -254,6 +260,12 @@ function PotSlot({ task, slotIndex, onWater, onPlant, onHarvest }: PotSlotProps)
     }
     prevStageRef.current = task?.stage
   }, [task?.stage])
+
+  useEffect(() => {
+    if (!confirmingRemove) return
+    const t = setTimeout(() => setConfirmingRemove(false), 3000)
+    return () => clearTimeout(t)
+  }, [confirmingRemove])
 
   function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -287,7 +299,7 @@ function PotSlot({ task, slotIndex, onWater, onPlant, onHarvest }: PotSlotProps)
       ))}
 
       {/* Slot label */}
-      <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: '#3d3428', letterSpacing: '2px', marginBottom: 4 }}>
+      <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#3d3428', letterSpacing: '2px', marginBottom: 4 }}>
         {occupied ? PLANT_NAMES[plantType] : `VASO ${slotIndex + 1}`}
       </p>
 
@@ -300,55 +312,94 @@ function PotSlot({ task, slotIndex, onWater, onPlant, onHarvest }: PotSlotProps)
       <PixelPot />
 
       {/* Info */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, marginTop: 8, width: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, marginTop: 8, width: '100%' }}>
         {task ? (
           <>
-            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#c4a35a', textAlign: 'center' }}>
+            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#c4a35a', textAlign: 'center' }}>
               {task.title.slice(0, 12)}
             </p>
-            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', color: isFruit ? '#e8b820' : '#4a3f33', letterSpacing: '1px' }}>
+            <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: isFruit ? '#e8b820' : '#4a3f33', letterSpacing: '1px' }}>
               {STAGE_LABEL[task.stage]}
             </p>
-            {isFruit ? (
-              <button
-                style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', background: 'rgba(232,184,32,0.12)', border: '1px solid #e8b820', color: '#e8b820', padding: '4px 10px', cursor: 'pointer', letterSpacing: '1px', animation: 'grow-pulse 1.5s ease-in-out infinite' }}
-                onClick={() => onHarvest(task.id)}
-              >
-                🌾 COLHER
-              </button>
-            ) : (
-              <button
-                style={{
-                  fontFamily: 'var(--pixel-font)', fontSize: '5px', background: 'transparent',
-                  border: `1px solid ${waterable ? '#4fc3a0' : '#3d3428'}`,
-                  color: waterable ? '#4fc3a0' : '#3d3428',
-                  padding: '4px 8px', cursor: waterable ? 'pointer' : 'not-allowed',
-                  letterSpacing: '1px', opacity: waterable ? 1 : 0.5,
-                }}
-                onClick={() => waterable && onWater(task.id)}
-              >
-                {timer ? `⏳ ${timer}` : '💧 REGAR'}
-              </button>
-            )}
+
+            <div style={{ width: '100%', padding: '0 2px' }}>
+              <div className="px-progress" style={{ width: '100%' }}>
+                <div className="px-progress-fill" style={{ width: `${STAGE_PERCENT[task.stage]}%`, background: isFruit ? '#e8b820' : '#7ab648' }} />
+              </div>
+              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#4a3f33', marginTop: 2, textAlign: 'right' }}>
+                {STAGE_PERCENT[task.stage]}% CRESCIDO
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+              {isFruit ? (
+                <button
+                  style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', background: 'rgba(232,184,32,0.12)', border: '1px solid #e8b820', color: '#e8b820', padding: '4px 10px', cursor: 'pointer', letterSpacing: '1px', animation: 'grow-pulse 1.5s ease-in-out infinite' }}
+                  onClick={() => onHarvest(task.id)}
+                >
+                  🌾 COLHER
+                </button>
+              ) : (
+                <button
+                  style={{
+                    fontFamily: 'var(--pixel-font)', fontSize: '7px', background: 'transparent',
+                    border: `1px solid ${waterable ? '#4fc3a0' : '#3d3428'}`,
+                    color: waterable ? '#4fc3a0' : '#3d3428',
+                    padding: '4px 8px', cursor: waterable ? 'pointer' : 'not-allowed',
+                    letterSpacing: '1px', opacity: waterable ? 1 : 0.5,
+                  }}
+                  onClick={() => waterable && onWater(task.id)}
+                >
+                  {timer ? `⏳ ${timer}` : '💧 REGAR'}
+                </button>
+              )}
+
+              {confirmingRemove ? (
+                <>
+                  <button
+                    title="Confirmar remoção"
+                    onClick={() => onRemove(task.id)}
+                    style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', background: 'transparent', border: '1px solid #c0392b', color: '#c0392b', padding: '4px 6px', cursor: 'pointer' }}
+                  >
+                    ✓
+                  </button>
+                  <button
+                    title="Cancelar"
+                    onClick={() => setConfirmingRemove(false)}
+                    style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', background: 'transparent', border: '1px solid #3d3428', color: '#6b6055', padding: '4px 6px', cursor: 'pointer' }}
+                  >
+                    ✕
+                  </button>
+                </>
+              ) : (
+                <button
+                  title="Remover planta"
+                  onClick={() => setConfirmingRemove(true)}
+                  style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', background: 'transparent', border: '1px solid #3d3428', color: '#6b6055', padding: '4px 6px', cursor: 'pointer' }}
+                >
+                  🗑
+                </button>
+              )}
+            </div>
           </>
         ) : planting ? (
           <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'center' }}>
             <input
               autoFocus
-              style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', background: '#0a0704', border: '1px solid #3d2e10', color: '#e8dcc8', padding: '4px 6px', width: 100, outline: 'none' }}
+              style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', background: '#0a0704', border: '1px solid #3d2e10', color: '#e8dcc8', padding: '4px 6px', width: 100, outline: 'none' }}
               placeholder="nome..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={18}
             />
             <div style={{ display: 'flex', gap: 4 }}>
-              <button style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', background: 'transparent', border: '1px solid #7ab648', color: '#7ab648', padding: '3px 8px', cursor: 'pointer' }} type="submit">✓</button>
-              <button style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', background: 'transparent', border: '1px solid #6b6055', color: '#6b6055', padding: '3px 8px', cursor: 'pointer' }} type="button" onClick={() => { setPlanting(false); setTitle('') }}>✕</button>
+              <button style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', background: 'transparent', border: '1px solid #7ab648', color: '#7ab648', padding: '3px 8px', cursor: 'pointer' }} type="submit">✓</button>
+              <button style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', background: 'transparent', border: '1px solid #6b6055', color: '#6b6055', padding: '3px 8px', cursor: 'pointer' }} type="button" onClick={() => { setPlanting(false); setTitle('') }}>✕</button>
             </div>
           </form>
         ) : (
           <button
-            style={{ fontFamily: 'var(--pixel-font)', fontSize: '5px', background: 'transparent', border: '1px solid #7ab648', color: '#7ab648', padding: '4px 10px', cursor: 'pointer', letterSpacing: '1px' }}
+            style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', background: 'transparent', border: '1px solid #7ab648', color: '#7ab648', padding: '4px 10px', cursor: 'pointer', letterSpacing: '1px' }}
             onClick={() => setPlanting(true)}
           >
             🌱 PLANTAR
@@ -395,7 +446,7 @@ function ToastContainer() {
       {toasts.map((t) => (
         <div key={t.id} style={{
           fontFamily: 'var(--pixel-font)',
-          fontSize: '6px',
+          fontSize: '8px',
           padding: '8px 14px',
           background: 'rgba(8,5,2,0.96)',
           border: `2px solid ${TOAST_COLOR[t.type]}`,
@@ -499,8 +550,8 @@ function TutorialModal({ onClose }: { onClose: () => void }) {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
-          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#4a3f33', letterSpacing: '4px', marginBottom: 10 }}>— TUTORIAL —</p>
-          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '13px', color: '#c4a35a', letterSpacing: '2px' }}>COMO JOGAR</p>
+          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#4a3f33', letterSpacing: '4px', marginBottom: 10 }}>— TUTORIAL —</p>
+          <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '15px', color: '#c4a35a', letterSpacing: '2px' }}>COMO JOGAR</p>
         </div>
 
         {/* Steps */}
@@ -510,7 +561,7 @@ function TutorialModal({ onClose }: { onClose: () => void }) {
               <div style={{ flexShrink: 0, width: 30, height: 30, background: '#1a1208', border: '1px solid #3d2e10', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
                 {step.icon}
               </div>
-              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#8a7a65', lineHeight: 2.2, margin: 0 }}>
+              <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color: '#8a7a65', lineHeight: 2.2, margin: 0 }}>
                 {step.text}
               </p>
             </div>
@@ -524,7 +575,7 @@ function TutorialModal({ onClose }: { onClose: () => void }) {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <button
             onClick={close}
-            style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', background: 'transparent', border: '1px solid #7ab648', color: '#7ab648', padding: '10px 32px', cursor: 'pointer', letterSpacing: '2px' }}
+            style={{ fontFamily: 'var(--pixel-font)', fontSize: '10px', background: 'transparent', border: '1px solid #7ab648', color: '#7ab648', padding: '10px 32px', cursor: 'pointer', letterSpacing: '2px' }}
           >
             ENTENDIDO! →
           </button>
@@ -566,28 +617,28 @@ function OxygenRestoredOverlay({ onDone }: { onDone: () => void }) {
 
       {/* Center content */}
       <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#4fc3a0', letterSpacing: '6px', animation: 'oxyText 0.5s 0.6s both' }}>— 2056 —</p>
+        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '10px', color: '#4fc3a0', letterSpacing: '6px', animation: 'oxyText 0.5s 0.6s both' }}>— 2056 —</p>
 
         <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '48px', color: '#7ab648', letterSpacing: '4px', margin: 0, animation: 'oxyText 0.6s 0.9s both', textShadow: '0 0 60px #7ab64888, 0 0 20px #7ab648' }}>
           O₂
         </p>
 
-        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '13px', color: '#4fc3a0', letterSpacing: '8px', margin: 0, animation: 'scanReveal 1.2s 1.5s both' }}>
+        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '15px', color: '#4fc3a0', letterSpacing: '8px', margin: 0, animation: 'scanReveal 1.2s 1.5s both' }}>
           RESTAURADO
         </p>
 
         <div style={{ width: 200, height: 2, background: 'linear-gradient(90deg, transparent, #7ab648, transparent)', animation: 'oxyText 0.4s 2.4s both', opacity: 0 }} />
 
-        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#3d6b28', letterSpacing: '3px', animation: 'oxyText 0.4s 2.6s both' }}>
+        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color: '#3d6b28', letterSpacing: '3px', animation: 'oxyText 0.4s 2.6s both' }}>
           A TERRA RESPIRA DE NOVO
         </p>
 
-        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#3d8c56', letterSpacing: '2px', marginTop: 8, animation: 'oxyText 0.4s 3s both' }}>
+        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color: '#3d8c56', letterSpacing: '2px', marginTop: 8, animation: 'oxyText 0.4s 3s both' }}>
           5 PLANTAS COLHIDAS ✓
         </p>
       </div>
 
-      <p style={{ position: 'absolute', bottom: 24, fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#2a2a2a', letterSpacing: '2px', animation: 'oxyText 0.4s 3.5s both' }}>
+      <p style={{ position: 'absolute', bottom: 24, fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#2a2a2a', letterSpacing: '2px', animation: 'oxyText 0.4s 3.5s both' }}>
         [ CLIQUE PARA CONTINUAR ]
       </p>
     </div>
@@ -663,6 +714,11 @@ export default function DashboardPage() {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['tasks'] }); syncOxygen() },
   })
 
+  const removeMutation = useMutation({
+    mutationFn: (id: string) => api.delete(`/tasks/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['tasks'] }),
+  })
+
   function handlePlant(title: string) {
     if (!user) visitor.addTask(title, '')
     else plantMutation.mutate(title)
@@ -681,6 +737,12 @@ export default function DashboardPage() {
     toast.ok('+10 O₂ coletado!')
   }
 
+  function handleRemove(id: string) {
+    if (!user) visitor.pruneTask(id)
+    else removeMutation.mutate(id)
+    toast.info('Planta removida')
+  }
+
   const slots: (Task | undefined)[] = Array.from({ length: MAX_SLOTS }, (_, i) => tasks[i])
 
   return (
@@ -695,20 +757,20 @@ export default function DashboardPage() {
 
       <header className="wg-header" style={{ position: 'relative', zIndex: 10, background: 'rgba(8,6,3,0.92)', borderBottom: '2px solid #3d3428', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '10px', color: '#7ab648' }}>🌱 WASTELAND GARDEN</span>
-          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#8a7a65' }}>{isVisitor ? 'Modo visitante' : user?.name}</span>
+          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '12px', color: '#7ab648' }}>🌱 WASTELAND GARDEN</span>
+          <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#8a7a65' }}>{isVisitor ? 'Modo visitante' : user?.name}</span>
         </div>
         <div className="wg-header-right" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div className="wg-oxygen-bar" style={{ width: 120 }}>
-            <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#4fc3a0', display: 'block', marginBottom: 2 }}>O₂ {oxygenLevel}</span>
+            <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#4fc3a0', display: 'block', marginBottom: 2 }}>O₂ {oxygenLevel}</span>
             <OxygenBar value={barValue} />
           </div>
-          <Link to="/history" style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#c4a35a', textDecoration: 'none' }}>Estufa</Link>
+          <Link to="/history" style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color: '#c4a35a', textDecoration: 'none' }}>Estufa</Link>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'stretch' }}>
-            <button className="px-btn px-btn-red" onClick={() => { logout(); navigate('/') }} style={{ fontSize: '6px' }}>Sair</button>
+            <button className="px-btn px-btn-red" onClick={() => { logout(); navigate('/') }} style={{ fontSize: '8px' }}>Sair</button>
             <button
               onClick={() => setShowTutorial(true)}
-              style={{ fontFamily: 'var(--pixel-font)', fontSize: '6px', background: 'transparent', border: '1px solid #c4a35a', color: '#c4a35a', padding: '4px 8px', cursor: 'pointer' }}
+              style={{ fontFamily: 'var(--pixel-font)', fontSize: '8px', background: 'transparent', border: '1px solid #c4a35a', color: '#c4a35a', padding: '4px 8px', cursor: 'pointer' }}
             >
               Como funciona
             </button>
@@ -717,17 +779,17 @@ export default function DashboardPage() {
       </header>
 
       {isVisitor && (
-        <div className="wg-visitor-banner" style={{ position: 'relative', zIndex: 10, background: 'rgba(42,30,8,0.92)', borderBottom: '2px solid #c4a35a', padding: '8px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--pixel-font)', fontSize: '6px', color: '#c4a35a' }}>
+        <div className="wg-visitor-banner" style={{ position: 'relative', zIndex: 10, background: 'rgba(42,30,8,0.92)', borderBottom: '2px solid #c4a35a', padding: '8px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'var(--pixel-font)', fontSize: '8px', color: '#c4a35a' }}>
           <span>⚠ Modo visitante — progresso não salvo</span>
-          <Link to="/register" style={{ color: '#7ab648', fontFamily: 'var(--pixel-font)', fontSize: '6px', textDecoration: 'none' }}>Criar conta para salvar →</Link>
+          <Link to="/register" style={{ color: '#7ab648', fontFamily: 'var(--pixel-font)', fontSize: '8px', textDecoration: 'none' }}>Criar conta para salvar →</Link>
         </div>
       )}
 
       <main style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 24px', gap: 16 }}>
-        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color: '#3d3428', letterSpacing: '4px' }}>— CANTEIRO —</p>
+        <p style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color: '#3d3428', letterSpacing: '4px' }}>— CANTEIRO —</p>
         <div className="wg-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 130px)', gap: 18 }}>
           {slots.map((task, i) => (
-            <PotSlot key={task?.id ?? `slot-${i}`} task={task} slotIndex={i} onWater={handleWater} onPlant={handlePlant} onHarvest={handleHarvest} />
+            <PotSlot key={task?.id ?? `slot-${i}`} task={task} slotIndex={i} onWater={handleWater} onPlant={handlePlant} onHarvest={handleHarvest} onRemove={handleRemove} />
           ))}
         </div>
       </main>

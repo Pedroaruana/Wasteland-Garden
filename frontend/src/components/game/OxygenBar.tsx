@@ -27,7 +27,7 @@ export default function OxygenBar({ value, animated }: Props) {
       <div className="px-progress" style={{ width: '100%' }}>
         <div className="px-progress-fill" style={{ width: `${display}%`, background: color, transition: 'background 0.3s' }} />
       </div>
-      <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '7px', color, textAlign: 'right' }}>
+      <span style={{ fontFamily: 'var(--pixel-font)', fontSize: '9px', color, textAlign: 'right' }}>
         {display}%
       </span>
     </div>

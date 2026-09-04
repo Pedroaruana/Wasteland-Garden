@@ -34,7 +34,7 @@ export default function RegisterPage() {
       <div style={styles.panel}>
         <h1 style={styles.title}>
           <span style={{ color: 'var(--toxic)' }}>CRIAR</span><br />
-          <span style={{ fontSize: '8px', color: 'var(--text-secondary)' }}>seu jardim</span>
+          <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>seu jardim</span>
         </h1>
 
         <form onSubmit={handleSubmit} style={styles.form}>
@@ -58,7 +58,7 @@ export default function RegisterPage() {
           Já tem jardim?{' '}
           <Link to="/login" style={{ color: 'var(--toxic)' }}>Entrar</Link>
         </p>
-        <Link to="/" style={{ color: 'var(--text-muted)', fontSize: '6px', fontFamily: 'var(--pixel-font)', textDecoration: 'none' }}>
+        <Link to="/" style={{ color: 'var(--text-muted)', fontSize: '8px', fontFamily: 'var(--pixel-font)', textDecoration: 'none' }}>
           ‹ Voltar
         </Link>
       </div>
@@ -69,10 +69,10 @@ export default function RegisterPage() {
 const styles: Record<string, React.CSSProperties> = {
   root: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-dark)', padding: '16px 0' },
   panel: { width: '320px', padding: '22px', background: 'var(--bg-panel)', border: '2px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' },
-  title: { fontFamily: 'var(--pixel-font)', fontSize: '14px', textAlign: 'center', lineHeight: 1.6 },
+  title: { fontFamily: 'var(--pixel-font)', fontSize: '16px', textAlign: 'center', lineHeight: 1.6 },
   form: { width: '100%', display: 'flex', flexDirection: 'column', gap: '8px' },
-  label: { fontFamily: 'var(--pixel-font)', fontSize: '6px', color: 'var(--text-secondary)', letterSpacing: '2px' },
-  input: { fontFamily: 'var(--pixel-font)', fontSize: '8px', background: 'var(--bg-dark)', border: '2px solid var(--border)', color: 'var(--text-primary)', padding: '8px', outline: 'none', width: '100%' },
-  error: { fontFamily: 'var(--pixel-font)', fontSize: '6px', color: 'var(--danger)', textAlign: 'center' },
-  link: { fontFamily: 'var(--pixel-font)', fontSize: '6px', color: 'var(--text-secondary)', textAlign: 'center' },
+  label: { fontFamily: 'var(--pixel-font)', fontSize: '8px', color: 'var(--text-secondary)', letterSpacing: '2px' },
+  input: { fontFamily: 'var(--pixel-font)', fontSize: '10px', background: 'var(--bg-dark)', border: '2px solid var(--border)', color: 'var(--text-primary)', padding: '8px', outline: 'none', width: '100%' },
+  error: { fontFamily: 'var(--pixel-font)', fontSize: '8px', color: 'var(--danger)', textAlign: 'center' },
+  link: { fontFamily: 'var(--pixel-font)', fontSize: '8px', color: 'var(--text-secondary)', textAlign: 'center' },
 }

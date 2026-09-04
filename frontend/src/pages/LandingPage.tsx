@@ -75,6 +75,11 @@ export default function LandingPage() {
         <p style={styles.hint}>
           Jogar agora não precisa de conta — crie uma para salvar seu progresso
         </p>
+
+        <div style={{ display: 'flex', gap: 10 }}>
+          <Link to="/privacidade" style={styles.footerLink}>Privacidade</Link>
+          <Link to="/termos" style={styles.footerLink}>Termos</Link>
+        </div>
       </div>
     </div>
   )
@@ -141,7 +146,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   yearText: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '7px',
+    fontSize: '9px',
     color: '#c4a35a',
     letterSpacing: '4px',
   },
@@ -159,7 +164,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tagline: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '9px',
+    fontSize: '11px',
     color: '#a04a2a',
     letterSpacing: '2px',
     margin: 0,
@@ -178,7 +183,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   dividerIcon: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '8px',
+    fontSize: '10px',
     color: 'rgba(196,163,90,0.5)',
   },
   buttons: {
@@ -189,7 +194,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   btnPrimary: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '10px',
+    fontSize: '12px',
     padding: '10px 28px',
     background: '#2d5a1e',
     border: '2px solid #7ab648',
@@ -205,7 +210,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   btnSecondary: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '7px',
+    fontSize: '9px',
     padding: '10px 20px',
     background: 'rgba(196,163,90,0.1)',
     border: '2px solid #c4a35a',
@@ -216,7 +221,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   btnGhost: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '7px',
+    fontSize: '9px',
     padding: '10px 20px',
     background: 'transparent',
     border: '2px solid rgba(107,96,85,0.5)',
@@ -227,9 +232,18 @@ const styles: Record<string, React.CSSProperties> = {
   },
   hint: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: '6px',
-    color: '#4a3f33',
+    fontSize: '8px',
+    color: '#8a7a65',
     letterSpacing: '1px',
     margin: 0,
+    textShadow: '1px 1px 0px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.9)',
+  },
+  footerLink: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: '7px',
+    color: '#6b6055',
+    letterSpacing: '1px',
+    textDecoration: 'none',
+    textShadow: '1px 1px 0px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.9)',
   },
 }
